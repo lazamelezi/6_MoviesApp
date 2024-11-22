@@ -1,0 +1,190 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.lazamelezi.moviesapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.lazamelezi.moviesapp"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        compose true
+        buildConfig true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.4' // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+    //flavors
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+
+            //API_KEY STRING
+            buildConfigField "String", "API_KEY", "\"591c6013ec4d1897dcee0205d774391b\""
+
+            //BASE_URL STRING
+            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+
+            //IMAGE_URL STRING
+            buildConfigField "String", "IMAGE_URL", "\"https://image.tmdb.org/t/p/w500/\""
+
+        }
+        prod {
+            dimension "default"
+            applicationIdSuffix ".prod"
+            versionNameSuffix "-prod"
+
+            //API_KEY STRING
+            buildConfigField "String", "API_KEY", "\"591c6013ec4d1897dcee0205d774391b\""
+
+            //BASE_URL STRING
+            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+
+            //IMAGE_URL STRING
+            buildConfigField "String", "IMAGE_URL", "\"https://image.tmdb.org/t/p/w500/\""
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    //compose
+    //Navigation compose
+    def nav_version = "2.5.3"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    //viewmodel compose
+    def lifecycle_version = "2.6.1"
+    def arch_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
+
+    def hilt_version = "2.44"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    //navigation hilt compose
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
+    //lifecycle-viewmodel compose
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    //Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    def timber_version = "5.0.1"
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    def lottieVersion = "6.0.0"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+
+    //okHttp
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    
+    implementation "androidx.compose.material:material:1.4.3"
+
+    //Material 3
+    implementation("androidx.compose.material3:material3:1.1.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.0")
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //rating bar
+    implementation 'com.github.a914-gowtham:compose-ratingbar:1.3.4'
+
+    //room
+    def room_version = "2.5.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+
+    //Local unit tests
+    //testImplementation "androidx.test.core:core:1.4.0"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1"
+    testImplementation "com.google.truth:truth:1.1.3"
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.11.0"
+    testImplementation "io.mockk:mockk:1.12.0"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.4.3"
+
+
+    //instrumentation test
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    androidTestImplementation "junit:junit:4.13.2"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1"
+    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
+    androidTestImplementation "com.google.truth:truth:1.1.3"
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
+    androidTestImplementation "androidx.test:core-ktx:1.5.0"
+    androidTestImplementation "io.mockk:mockk-android:1.12.0"
+    androidTestImplementation "androidx.test:runner:1.4.0"
+
+
+
+
+}
